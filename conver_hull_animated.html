@@ -1,0 +1,49 @@
+import webbrowser
+import tempfile
+import os
+
+def create_and_open_visualizer():
+    """Create HTML visualizer and open it in the default browser."""
+    
+    html_content = '''
+    <!-- Your HTML code here - copy from the artifact above -->
+    <!DOCTYPE html>
+    <html lang="en">
+    <!-- ... rest of the HTML content ... -->
+    '''
+    
+    # Create temporary HTML file
+    with tempfile.NamedTemporaryFile(mode='w', suffix='.html', delete=False) as f:
+        f.write(html_content)
+        temp_path = f.name
+    
+    # Open in browser
+    webbrowser.open('file://' + os.path.abspath(temp_path))
+    print(f"Visualizer opened in browser: {temp_path}")
+    
+    return temp_path
+
+def export_points_to_js(points, filename="points.js"):
+    """Export Python points to JavaScript format for the visualizer."""
+    js_points = "const preloadedPoints = [\n"
+    for x, y in points:
+        js_points += f"    {{x: {x}, y: {y}}},\n"
+    js_points += "];"
+    
+    with open(filename, 'w') as f:
+        f.write(js_points)
+    
+    print(f"Points exported to {filename}")
+
+# Example usage:
+if __name__ == "__main__":
+    # Generate some sample points
+    import random
+    random.seed(42)
+    sample_points = [(random.uniform(50, 1150), random.uniform(50, 650)) for _ in range(20)]
+    
+    # Export points
+    export_points_to_js(sample_points)
+    
+    # Create and open visualizer
+    create_and_open_visualizer()
